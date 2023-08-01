@@ -1,6 +1,6 @@
 console.log("Rock Paper Scissors Game!");
 
-function computerPlay(){
+function computerPlay() {
     const options = ['rock', 'paper', 'scissors'];
     const randomValue = Math.floor(Math.random() * options.length);
 
@@ -8,24 +8,52 @@ function computerPlay(){
 
 };
 
-const computerSelection = computerPlay();
-const playerSelection = 'Rock';
-
-
-function playRound(playerSelection = 'Select a valid value: (Rock, Paper or Scissors)', computerSelection = 'Computer error'){
+function playRound(playerSelection = 'Select a valid value: (Rock, Paper or Scissors)', computerSelection = 'Computer error') {
     playerSelection = playerSelection.toLowerCase();
 
-    console.log(`Player choice: ${playerSelection}.
-computer choice: ${computerSelection}.`)
+    console.log(`Player choice: ${playerSelection} VS computer choice: ${computerSelection}.`)
 
-    if((computerSelection === 'rock' && playerSelection === 'scissors') || (computerSelection === 'paper' && playerSelection ==='rock') || (computerSelection === 'scissors' && playerSelection === "paper")){
-        return `Computer Wins! ${computerSelection} defeats ${playerSelection}! Try again!`
-      } else if((computerSelection === 'rock' && playerSelection === 'paper') || (computerSelection === 'paper' && playerSelection === 'scissors') || (computerSelection === 'scissors' && playerSelection === 'rock')){
-        return `Player wins ${playerSelection} defeats ${computerSelection}! Congratulations!`
-      } else if (computerSelection === playerSelection){
+    if ((computerSelection === 'rock' && playerSelection === 'scissors') || (computerSelection === 'paper' && playerSelection === 'rock') || (computerSelection === 'scissors' && playerSelection === "paper")) {
+        return `Computer Wins the round! ${computerSelection} defeats ${playerSelection}!`;
+    } else if ((computerSelection === 'rock' && playerSelection === 'paper') || (computerSelection === 'paper' && playerSelection === 'scissors') || (computerSelection === 'scissors' && playerSelection === 'rock')) {
+        return `Player wins the round! ${playerSelection} defeats ${computerSelection}! Congratulations!`;
+    } else if (computerSelection === playerSelection) {
         return `That's a tie!`;
-      }
+    } else {
+        return 'Reload';
+    }
 
 };
 
-console.log(playRound(playerSelection, computerSelection))
+function game() {
+    let playerScore = 0;
+    let computerScore = 0;
+
+
+    for (let i = 0; i < 5; i++) {
+        const computerSelection = computerPlay();
+        const playerSelection = 'Rock';
+        const winner = playRound(playerSelection, computerSelection);
+        console.log(winner)
+
+        if (winner.includes('Player')) {
+            playerScore = playerScore + 1;
+        } else if (winner.includes('Computer')) {
+            computerScore = computerScore + 1;
+        };
+        console.log(`Score: Player = ${playerScore} | Computer: ${computerScore}`);
+    }
+    switch(true){
+        case computerScore > playerScore:
+            console.log('Computer won the game. Try again!');
+            break;
+        case playerScore > computerScore:
+            console.log('Player won the game! Congratulations!');
+            break;
+        default:
+            console.log('The game tied! Let\'s play again!');
+    }
+
+};
+
+game();
