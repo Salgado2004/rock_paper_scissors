@@ -1,4 +1,5 @@
-console.log("Rock Paper Scissors Game!");
+console.log("Mr Branko was hacked and now you must to fight against the bad IA who done it. Defeat the evil in this rock, paper scissors game to save the world!");
+console.log("Click in the white area of the browser window then press space in the keyboard to start the game! Good luck! The world needs you!");
 
 function computerPlay() {
 
@@ -31,7 +32,7 @@ function playRound(playerSelection, computerSelection) {
     if ((computerSelection === 'rock' && playerSelection === 'scissors') || (computerSelection === 'paper' && playerSelection === 'rock') || (computerSelection === 'scissors' && playerSelection === "paper")) {
         return `Computer Wins the round! ${computerSelection} defeats ${playerSelection}!`;
     } else if ((computerSelection === 'rock' && playerSelection === 'paper') || (computerSelection === 'paper' && playerSelection === 'scissors') || (computerSelection === 'scissors' && playerSelection === 'rock')) {
-        return `Player wins the round! ${playerSelection} defeats ${computerSelection}! Congratulations!`;
+        return `Player wins the round! ${playerSelection} defeats ${computerSelection}!`;
     } else if (computerSelection === playerSelection) {
         return `That's a tie!`;
     } else {
@@ -48,8 +49,12 @@ function game() {
     for (let i = 0; i < 5; i++) {
         const computerSelection = computerPlay();
         const playerSelection = getPlayerOption();
+        
+        console.log(`Round: ${i + 1}`);
+
         const winner = playRound(playerSelection, computerSelection);
         console.log(winner);
+
 
         if (winner.includes('Player')) {
             playerScore = playerScore + 1;
@@ -62,15 +67,25 @@ function game() {
 
     switch (true) {
         case computerScore > playerScore:
-            console.log('Computer won the game. Try again!');
+            console.log('Computer won the game. The world became mine!');
             break;
         case playerScore > computerScore:
-            console.log('Player won the game! Congratulations!');
+            console.log('Player won the game! The world is safe now and Mr Branko is free!');
             break;
         default:
-            console.log('The game tied! Let\'s play again!');
+            console.log('The game tied! Let\'s play until only one be in their foots!');
+            console.log('Press space again! Don\'t be a coward!');
     };
 
 };
 
-game();
+
+function gameInicialization(event){
+    if(event.key === ' '){
+        game();
+        console.log('To play again reload the page!');
+        document.removeEventListener('keypress', gameInicialization);
+    };
+};
+
+document.addEventListener('keypress', gameInicialization);
