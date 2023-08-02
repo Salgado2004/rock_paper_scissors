@@ -12,17 +12,23 @@ function computerPlay() {
 
 function getPlayerOption() {
 
-    let playerChoice = prompt('Choose between: Rock, Paper or Scissors!');
-    playerChoice = playerChoice.toLowerCase();
-
-    while (playerChoice !== 'rock' && playerChoice !== 'paper' && playerChoice !== 'scissors') {
-        alert('Your choice must be one of the tree options: Rock, Paper or Scissors!');
-        playerChoice = prompt('Choose between: Rock, Paper or Scissor');
-        playerChoice = playerChoice.toLowerCase();
+    let playerChoice
+    let key = false
+    while (!key){
+        let choice = prompt('Choose between: Rock, Paper or Scissors!');
+        if (choice !== null){
+            playerChoice = choice.toLowerCase()
+            if (playerChoice === 'rock' || playerChoice === 'paper' || playerChoice === 'scissors'){
+                key = true
+            } else {
+                alert('You have to enter one of the tree options: Rock, Paper or Scissors!');
+            }
+        } else {
+            alert('You have to enter one of the tree options: Rock, Paper or Scissors!');
+        }
     };
 
     return playerChoice;
-
 };
 
 function playRound(playerSelection, computerSelection) {
