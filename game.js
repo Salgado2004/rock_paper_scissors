@@ -79,6 +79,7 @@ function game() { //the game function
         console.log(`Score: Player = ${playerScore} | Computer: ${computerScore}\n`);
     };
 
+    console.log('---------------------------------');
     switch (true) { //true is just to make the switch work
         case computerScore > playerScore:
             console.log('Computer won the game. The world became mine!');
@@ -90,8 +91,6 @@ function game() { //the game function
             console.log('The game tied! Let\'s play until only one be in their foots!');
             console.log('Press space again! Don\'t be a coward!');
     };
-
-    console.log('---------------------------------');
     console.log('Final results:');
     console.table(score_table);
 
