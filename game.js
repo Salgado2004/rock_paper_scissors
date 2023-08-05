@@ -69,6 +69,29 @@ function playRound(playerSelection, computerSelection) {
   }
 }
 
+function finalScore(playerScore, computerScore, scoreTable) {
+    console.log("---------------------------------");
+    switch (
+        true //true is just to make the switch work
+    ) {
+        case computerScore > playerScore:
+        console.log("Computer won the game. The world became mine!");
+        break;
+        case playerScore > computerScore:
+        console.log(
+            "Player won the game! The world is safe now and Mr Branko is free!"
+        );
+        break;
+        default:
+        console.log(
+            "The game tied! Let's play until only one be in their foots!"
+        );
+    }
+    console.log("Final results:");
+    console.table(scoreTable);
+    console.log("Reload the page to play again!");
+}
+
 async function game() {
   //the game function
 
@@ -112,25 +135,7 @@ async function game() {
     }
   }
     if (i === 5){
-        console.log("---------------------------------");
-        switch (
-            true //true is just to make the switch work
-        ) {
-            case computerScore > playerScore:
-            console.log("Computer won the game. The world became mine!");
-            break;
-            case playerScore > computerScore:
-            console.log(
-                "Player won the game! The world is safe now and Mr Branko is free!"
-            );
-            break;
-            default:
-            console.log(
-                "The game tied! Let's play until only one be in their foots!"
-            );
-        }
-        console.log("Final results:");
-        console.table(score_table);
+        finalScore(playerScore, computerScore, score_table);
     }
 }
 
