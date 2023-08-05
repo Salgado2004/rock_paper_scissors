@@ -1,8 +1,8 @@
 console.log(
-  "Mr Branko was hacked and now you must fight against the bad AI who did it. Defeat the evil in this Rock, Paper Scissors game to save the world!"
+  "Mr Branko was hacked and now you must fight against the bad AI who did it.\nDefeat the evil in this Rock, Paper Scissors game to save the world!"
 );
 console.log(
-  "Click in the white area of the browser window then press space in the keyboard to start the game! Good luck! The world needs you!"
+  "Press Ctrl+Shift+I to open the console and start the game!\n\n Good luck! The world needs you!"
 );
 
 function computerPlay() {
@@ -20,11 +20,11 @@ function getPlayerOption() {
     let choice = prompt("Choose between: Rock, Paper or Scissors!");
     if (choice !== null) {
       //if the user press cancel the prompt returns null
-      playerChoice = choice.toLowerCase().trim();
+      playerChoice = choice.toLowerCase();
       if (
-        playerChoice === "rock" ||
-        playerChoice === "paper" ||
-        playerChoice === "scissors"
+        playerChoice.trim() === "rock" ||
+        playerChoice.trim() === "paper" ||
+        playerChoice.trim() === "scissors"
       ) {
         //
         key = true;
@@ -35,9 +35,10 @@ function getPlayerOption() {
         );
       }
     } else {
-      alert(
-        "You have to enter one of the three options: Rock, Paper or Scissors!"
-      );
+      let answer = confirm("You have input 'null'. Are you sure you want to cancel the game?");
+      if (answer) {
+        throw new Error("Game canceled!");
+      }
     }
   }
 
@@ -68,62 +69,69 @@ function playRound(playerSelection, computerSelection) {
   }
 }
 
-function game() {
+async function game() {
   //the game function
 
   let playerScore = 0;
   let computerScore = 0;
+  let i;
 
   const score_table = [];
 
-  for (let i = 0; i < 5; i++) {
-    const computerSelection = computerPlay();
-    const playerSelection = getPlayerOption();
-
+  for (i = 0; i < 5; i++) {
     console.log("---------------------------------");
     console.log(`Round: ${i + 1}`);
 
-    const winner = playRound(playerSelection, computerSelection);
-    console.log(winner);
+    try{    
+        const computerSelection = await computerPlay();
+        const playerSelection = await getPlayerOption();
 
-    if (winner.includes("Player")) {
-      //if the winner is the player
-      playerScore = playerScore + 1;
-      score_table.push({ Player: 1, Computer: 0 });
-    } else if (winner.includes("Computer")) {
-      //if the winner is the computer
-      computerScore = computerScore + 1;
-      score_table.push({ Player: 0, Computer: 1 });
-    } else {
-      //if the round tied
-      score_table.push({ Player: 0, Computer: 0 });
+        const winner = playRound(playerSelection, computerSelection);
+        console.log(winner);
+
+        if (winner.includes("Player")) {
+        //if the winner is the player
+            playerScore = playerScore + 1;
+            score_table.push({ Player: 1, Computer: 0 });
+        } else if (winner.includes("Computer")) {
+            //if the winner is the computer
+            computerScore = computerScore + 1;
+            score_table.push({ Player: 0, Computer: 1 });
+        } else {
+        //if the round tied
+            score_table.push({ Player: 0, Computer: 0 });
+        }
+
+        console.log(
+        `Score: Player = ${playerScore} | Computer: ${computerScore}\n`
+        );
+    }catch(error) {
+        console.log(error);
+        console.log("Reload the page to play again!");
+        break;
     }
-
-    console.log(
-      `Score: Player = ${playerScore} | Computer: ${computerScore}\n`
-    );
   }
-
-  console.log("---------------------------------");
-  switch (
-    true //true is just to make the switch work
-  ) {
-    case computerScore > playerScore:
-      console.log("Computer won the game. The world became mine!");
-      break;
-    case playerScore > computerScore:
-      console.log(
-        "Player won the game! The world is safe now and Mr Branko is free!"
-      );
-      break;
-    default:
-      console.log(
-        "The game tied! Let's play until only one be in their foots!"
-      );
-      console.log("Press space again! Don't be a coward!");
-  }
-  console.log("Final results:");
-  console.table(score_table);
+    if (i === 5){
+        console.log("---------------------------------");
+        switch (
+            true //true is just to make the switch work
+        ) {
+            case computerScore > playerScore:
+            console.log("Computer won the game. The world became mine!");
+            break;
+            case playerScore > computerScore:
+            console.log(
+                "Player won the game! The world is safe now and Mr Branko is free!"
+            );
+            break;
+            default:
+            console.log(
+                "The game tied! Let's play until only one be in their foots!"
+            );
+        }
+        console.log("Final results:");
+        console.table(score_table);
+    }
 }
 
 game();
