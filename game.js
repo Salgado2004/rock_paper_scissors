@@ -20,7 +20,7 @@ function getPlayerOption() {
     let choice = prompt("Choose between: Rock, Paper or Scissors!");
     if (choice !== null) {
       //if the user press cancel the prompt returns null
-      playerChoice = choice.toLowerCase().trim();
+      playerChoice = choice.toLowerCase();
       if (
         playerChoice === "rock" ||
         playerChoice === "paper" ||
