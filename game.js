@@ -31,7 +31,7 @@ function getPlayerOption() {
       } else {
         //if the user enter something different from the options
         alert(
-          "You have to enter one of the three options: Rock, Paper or Scissors!"
+          `Your input was ${choice}\n\nYou have to enter one of the three options: Rock, Paper or Scissors!`
         );
       }
     } else {
