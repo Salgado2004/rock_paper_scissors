@@ -126,12 +126,4 @@ function game() {
   console.table(score_table);
 }
 
-function gameInicialization(event) {
-  if (event.key === " ") {
-    game();
-    console.log("To play again reload the page!");
-    document.removeEventListener("keypress", gameInicialization);
-  }
-}
-
-document.addEventListener("keypress", gameInicialization);
+game();
