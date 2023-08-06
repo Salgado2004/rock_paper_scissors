@@ -58,40 +58,68 @@ function playRound(playerSelection, computerSelection) {
   choices.textContent = `Player: ${playerSelection} VS Computer: ${computerSelection}`;
   roundResult.appendChild(choices);
 
-  if (
-    (computerSelection === "rock" && playerSelection === "scissors") ||
-    (computerSelection === "paper" && playerSelection === "rock") ||
-    (computerSelection === "scissors" && playerSelection === "paper")
-  ) {
-    return `Computer Wins the round! ${computerSelection} defeats ${playerSelection}!`;
-  } else if (
-    (computerSelection === "rock" && playerSelection === "paper") ||
-    (computerSelection === "paper" && playerSelection === "scissors") ||
-    (computerSelection === "scissors" && playerSelection === "rock")
-  ) {
-    return `Player wins the round! ${playerSelection} defeats ${computerSelection}!`;
+  const result = document.createElement("p");
+  result.classList.add("result");
+  roundResult.appendChild(result);
+
+  let winner;
+
+  if (computerSelection === "rock" && playerSelection === "scissors" || computerSelection === "paper" && playerSelection === "rock" || computerSelection === "scissors" && playerSelection === "paper"){
+    result.textContent = `Computer Wins the round! ${computerSelection} defeats ${playerSelection}!`;
+    winner = "Computer";
+  } else if ( computerSelection === "rock" && playerSelection === "paper" || computerSelection === "paper" && playerSelection === "scissors" || computerSelection === "scissors" && playerSelection === "rock"){
+    result.textContent = `Player wins the round! ${playerSelection} defeats ${computerSelection}!`;
+    winner = "Player";
   } else if (computerSelection === playerSelection) {
-    return `That's a tie!`;
+    result.textContent = `That's a tie! Both chose ${playerSelection}!`;
+    winner = "Tie";
   } else {
-    return "Reload";
+    winner = "Reload";
   }
+
+  const nextRound = document.createElement("button");
+  nextRound.classList.add("next-round");
+  nextRound.textContent = "Next";
+  roundResult.appendChild(nextRound);
+
+  const cancelGame = document.createElement("button");
+  cancelGame.classList.add("cancel-game");
+  cancelGame.textContent = "Cancel Game";
+  roundResult.appendChild(cancelGame);
+
+  return new Promise((resolve, reject) => {
+    nextRound.addEventListener("click", () => {
+      roundResult.remove();
+      resolve(winner);
+    });
+
+    cancelGame.addEventListener("click", () => {
+      roundResult.remove();
+      reject("Game Canceled");
+    });
+  });
 }
 
-function finalScore(playerScore, computerScore, scoreTable) {
-    console.log("---------------------------------");
+function finalScore(playerScore, computerScore) {
+    const finalScore = document.createElement("p");
+    finalScore.classList.add("final-score");
+    gameWindow.appendChild(finalScore);
+    finalScore.textContent = `Final Score: Player = ${playerScore} | Computer: ${computerScore}`;
+
+    const finalResult = document.createElement("p");
+    finalResult.classList.add("final-result");
+    gameWindow.appendChild(finalResult);
+
     switch (true ) { //true is just to make the switch work
         case computerScore > playerScore:
-        console.log("Computer won the game. The world became mine!");
+        finalResult.textContent = "Computer won the game. The world became mine!";
         break;
         case playerScore > computerScore:
-        console.log("Player won the game! The world is safe now and Mr Branko is free!");
+        finalResult.textContent = "Player won the game! The world is safe now and Mr Branko is free!";
         break;
         default:
-        console.log("The game tied! Let's play until only one be in their foots!");
+        finalResult.textContent = "The game tied! Let's play until only one be in their foots!";
     }
-    console.log("Final results:");
-    console.table(scoreTable);
-    console.log("Reload the page to play again!");
 }
 
 async function game() {
@@ -101,33 +129,34 @@ async function game() {
   let playerScore = 0;
   let computerScore = 0;
   let i;
-
-  const score_table = [];
-
   
   const roundLabel = document.createElement("h2");
   roundLabel.classList.add("round-label");
   gameWindow.appendChild(roundLabel);
 
+  const scoreLabel = document.createElement("p");
+  scoreLabel.classList.add("score-label");
+  gameWindow.appendChild(scoreLabel);
+
   for (i = 0; i < 5; i++) {
     roundLabel.textContent = `Round: ${i + 1}`;
+    scoreLabel.textContent = `Score: Player = ${playerScore} | Computer: ${computerScore}`;
     
     try{    
         const computerSelection = computerPlay();
         const playerSelection = await getPlayerOption();
-        const winner = playRound(playerSelection, computerSelection);
+        const winner = await playRound(playerSelection, computerSelection);
 
         if (winner.includes("Player")) {
         //if the winner is the player
-            playerScore = playerScore + 1;
-            score_table.push({ Player: 1, Computer: 0 });
+            playerScore++;
         } else if (winner.includes("Computer")) {
             //if the winner is the computer
-            computerScore = computerScore + 1;
-            score_table.push({ Player: 0, Computer: 1 });
+            computerScore++;
         } else {
         //if the round tied
-            score_table.push({ Player: 0, Computer: 0 });
+            playerScore++;
+            computerScore++;
         }
 
         console.log(
@@ -140,6 +169,16 @@ async function game() {
     }
   }
     if (i === 5){
-        finalScore(playerScore, computerScore, score_table);
-    }
+        scoreLabel.remove();
+        finalScore(playerScore, computerScore);
+    } 
+
+    const playAgain = document.createElement("button");
+    playAgain.classList.add("play-again");
+    playAgain.textContent = "Play Again";
+    gameWindow.appendChild(playAgain);
+
+    playAgain.addEventListener("click", () => {
+        game();
+    });
 }
