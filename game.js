@@ -1,9 +1,4 @@
-console.log(
-  "Mr Branko was hacked and now you must fight against the bad AI who did it.\nDefeat the evil in this Rock, Paper Scissors game to save the world!"
-);
-console.log(
-  "Press Ctrl+Shift+I to open the console and start the game!\n\n Good luck! The world needs you!"
-);
+const gameWindow = document.querySelector(".game");
 
 function computerPlay() {
   const options = ["rock", "paper", "scissors"];
@@ -15,40 +10,53 @@ function computerPlay() {
 
 function getPlayerOption() {
   let playerChoice;
-  let key = false;
-  while (!key) {
-    let choice = prompt("Choose between: Rock, Paper or Scissors!");
-    if (choice !== null) {
-      //if the user press cancel the prompt returns null
-      playerChoice = choice.toLowerCase();
-      if (
-        playerChoice.trim() === "rock" ||
-        playerChoice.trim() === "paper" ||
-        playerChoice.trim() === "scissors"
-      ) {
-        //
-        key = true;
-      } else {
-        //if the user enter something different from the options
-        alert(
-          `Your input was ${choice}\n\nYou have to enter one of the three options: Rock, Paper or Scissors!`
-        );
-      }
-    } else {
-      let answer = confirm("You have input 'null'. Are you sure you want to cancel the game?");
-      if (answer) {
-        throw new Error("Game canceled!");
-      }
-    }
-  }
 
-  return playerChoice;
+  const optionsFrame = document.createElement("div");
+  optionsFrame.classList.add("options");
+  gameWindow.appendChild(optionsFrame);
+
+  const rock = document.createElement("button");
+  rock.classList.add("rock", "option");
+  rock.textContent = "Rock";
+  optionsFrame.appendChild(rock);
+
+  const paper = document.createElement("button");
+  paper.classList.add("paper", "option");
+  paper.textContent = "Paper";
+  optionsFrame.appendChild(paper);
+
+  const scissors = document.createElement("button");
+  scissors.classList.add("scissors", "option");
+  scissors.textContent = "Scissors";
+  optionsFrame.appendChild(scissors);
+
+  optionsFrame.querySelectorAll(".option").forEach((option) => {
+    option.addEventListener("click", () => {
+      playerChoice = option.classList[0];
+    });
+  });
+
+  return new Promise((resolve, reject) => {
+    const interval = setInterval(() => {
+      if (playerChoice) {
+        clearInterval(interval);
+        optionsFrame.remove();
+        resolve(playerChoice);
+      }
+    }, 100);
+  });
+
 }
 
 function playRound(playerSelection, computerSelection) {
-  console.log(
-    `Player choice: ${playerSelection} VS computer choice: ${computerSelection}.`
-  );
+  const roundResult = document.createElement("div");
+  roundResult.classList.add("round-result");
+  gameWindow.appendChild(roundResult);
+
+  const choices = document.createElement("p");
+  choices.classList.add("choices");
+  choices.textContent = `Player: ${playerSelection} VS Computer: ${computerSelection}`;
+  roundResult.appendChild(choices);
 
   if (
     (computerSelection === "rock" && playerSelection === "scissors") ||
@@ -71,21 +79,15 @@ function playRound(playerSelection, computerSelection) {
 
 function finalScore(playerScore, computerScore, scoreTable) {
     console.log("---------------------------------");
-    switch (
-        true //true is just to make the switch work
-    ) {
+    switch (true ) { //true is just to make the switch work
         case computerScore > playerScore:
         console.log("Computer won the game. The world became mine!");
         break;
         case playerScore > computerScore:
-        console.log(
-            "Player won the game! The world is safe now and Mr Branko is free!"
-        );
+        console.log("Player won the game! The world is safe now and Mr Branko is free!");
         break;
         default:
-        console.log(
-            "The game tied! Let's play until only one be in their foots!"
-        );
+        console.log("The game tied! Let's play until only one be in their foots!");
     }
     console.log("Final results:");
     console.table(scoreTable);
@@ -94,6 +96,7 @@ function finalScore(playerScore, computerScore, scoreTable) {
 
 async function game() {
   //the game function
+  gameWindow.innerHTML = "";
 
   let playerScore = 0;
   let computerScore = 0;
@@ -101,16 +104,18 @@ async function game() {
 
   const score_table = [];
 
+  
+  const roundLabel = document.createElement("h2");
+  roundLabel.classList.add("round-label");
+  gameWindow.appendChild(roundLabel);
+
   for (i = 0; i < 5; i++) {
-    console.log("---------------------------------");
-    console.log(`Round: ${i + 1}`);
-
+    roundLabel.textContent = `Round: ${i + 1}`;
+    
     try{    
-        const computerSelection = await computerPlay();
+        const computerSelection = computerPlay();
         const playerSelection = await getPlayerOption();
-
         const winner = playRound(playerSelection, computerSelection);
-        console.log(winner);
 
         if (winner.includes("Player")) {
         //if the winner is the player
@@ -138,5 +143,3 @@ async function game() {
         finalScore(playerScore, computerScore, score_table);
     }
 }
-
-game();
