@@ -77,15 +77,18 @@ function playRound(playerSelection, computerSelection) {
     winner = "Reload";
   }
 
+  const buttonFrame = document.createElement("div");
+  roundResult.appendChild(buttonFrame);
+
   const nextRound = document.createElement("button");
-  nextRound.classList.add("next-round");
+  nextRound.classList.add("next-round", "control-button");
   nextRound.textContent = "Next";
-  roundResult.appendChild(nextRound);
+  buttonFrame.appendChild(nextRound);
 
   const cancelGame = document.createElement("button");
-  cancelGame.classList.add("cancel-game");
+  cancelGame.classList.add("cancel-game", "control-button");
   cancelGame.textContent = "Cancel Game";
-  roundResult.appendChild(cancelGame);
+  buttonFrame.appendChild(cancelGame);
 
   return new Promise((resolve, reject) => {
     nextRound.addEventListener("click", () => {
@@ -101,24 +104,31 @@ function playRound(playerSelection, computerSelection) {
 }
 
 function finalScore(playerScore, computerScore) {
+    const finalFrame = document.createElement("div");
+    finalFrame.classList.add("final-frame");
+    gameWindow.appendChild(finalFrame);
+
     const finalScore = document.createElement("p");
     finalScore.classList.add("final-score");
-    gameWindow.appendChild(finalScore);
+    finalFrame.appendChild(finalScore);
     finalScore.textContent = `Final Score: Player = ${playerScore} | Computer: ${computerScore}`;
 
     const finalResult = document.createElement("p");
     finalResult.classList.add("final-result");
-    gameWindow.appendChild(finalResult);
+    finalFrame.appendChild(finalResult);
 
     switch (true ) { //true is just to make the switch work
         case computerScore > playerScore:
         finalResult.textContent = "Computer won the game. The world became mine!";
+        document.body.style.setProperty('--image', 'url(./images/robot.svg)');
         break;
         case playerScore > computerScore:
         finalResult.textContent = "Player won the game! The world is safe now and Mr Branko is free!";
+        document.body.style.setProperty('--image', 'url(./images/trophy.svg)');
         break;
         default:
         finalResult.textContent = "The game tied! Let's play until only one be in their foots!";
+        document.body.style.setProperty('--image', 'url(./images/tied.svg)');
     }
 }
 
